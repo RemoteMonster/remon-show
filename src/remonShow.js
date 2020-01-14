@@ -106,32 +106,31 @@ class remonShow extends HTMLElement {
         window.addEventListener('DOMContentLoaded', async function(){
             let devices = await navigator.mediaDevices.enumerateDevices();
             for (let i = 0; i < devices.length; i++) {
-            let device = devices[i];
-            let div = document.createElement('div');
-            div.divceKind = device.kind;
-            div.id = device.deviceId;
-            div.innerText = device.label;
+                let device = devices[i];
+                let div = document.createElement('div');
+                div.divceKind = device.kind;
+                div.id = device.deviceId;
+                div.innerText = device.label;
 
-            if (device.kind === "videoinput") {
-                div.className = "video-input-list-item"
-                div.onclick = function(){
-                    config.media.video = {deviceId:device.deviceId};
-                    updateInput(this);
+                if (device.kind === "videoinput") {
+                    div.className = "video-input-list-item"
+                    div.onclick = function(){
+                        config.media.video = {deviceId:device.deviceId};
+                        updateInput(this);
+                    }
+                    player.querySelector('.video-input-list').appendChild(div);
+                } else if (device.kind === "audioinput") {
+                    div.className = "audio-input-list-item"
+                    div.onclick = function(){
+                        config.media.audio = {deviceId:device.deviceId}
+                        updateInput(this);
+                    }
+                    player.querySelector('.audio-input-list').appendChild(div);
                 }
-                player.querySelector('.video-input-list').appendChild(div);
-            } else if (device.kind === "audioinput") {
-                div.className = "audio-input-list-item"
-                div.onclick = function(){
-                    config.media.audio = {deviceId:device.deviceId}
-                    updateInput(this);
-                }
-                player.querySelector('.audio-input-list').appendChild(div);
-            }
             }
 
             async function updateInput(item){
                 if(item.divceKind==="videoinput"){
-                   
                     if(remon.context.peerConnection){
                         player.querySelectorAll('.video-input-list-item').forEach(function(node){
                             if(item.id !== node.id){node.style.background = "rgba(0,0,0,0.5)"}
@@ -174,11 +173,6 @@ class remonShow extends HTMLElement {
                     }
                 }
             }
-
-
-
-
-
         })
 
         const player       =  document.querySelector('.player');
@@ -219,15 +213,15 @@ class remonShow extends HTMLElement {
 
         // Create fullscreen video button
         function toggleFullscreen() {
-                if (!player.fullscreenElement && player.requestFullscreen) {
-                    player.requestFullscreen();
-                } else if (!player.mozRequestFullScreen && player.mozRequestFullScreen) {
-                    player.mozRequestFullScreen();
-                } else if (!player.webkitRequestFullscreen && player.webkitRequestFullscreen) {
-                    player.webkitRequestFullscreen();
-                } else if(!player.msRequestFullscreen && player.msRequestFullscreen){
-                    player.msRequestFullscreen();
-                }
+            if (!player.fullscreenElement && player.requestFullscreen) {
+                player.requestFullscreen();
+            } else if (!player.mozRequestFullScreen && player.mozRequestFullScreen) {
+                player.mozRequestFullScreen();
+            } else if (!player.webkitRequestFullscreen && player.webkitRequestFullscreen) {
+                player.webkitRequestFullscreen();
+            } else if(!player.msRequestFullscreen && player.msRequestFullscreen){
+                player.msRequestFullscreen();
+            }
         }
 
         function showVideoInputList(){
