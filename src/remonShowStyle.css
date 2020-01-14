@@ -1,0 +1,268 @@
+html {
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+/* body {
+  margin: 0;
+  padding: 0;
+  display:flex;
+  background:#7A419B;
+  min-height:100vh;
+  background: linear-gradient(135deg, #7c1599 0%,#921099 48%,#7e4ae8 100%);
+  background-size:cover;
+  align-items: center;
+  justify-content: center;
+} */
+
+.player {
+  width: 100%;
+  /* border:5px solid rgba(0,0,0,0.2); */
+  /* box-shadow:0 0 20px rgba(0,0,0,0.2); */
+  position: relative;
+  font-size: 30;
+  overflow: hidden;
+}
+
+/* This css is only applied when fullscreen is active. */
+.player:fullscreen {
+  max-width: none;
+  width: 100%;
+}
+
+.player:-webkit-full-screen {
+  max-width: none;
+  width: 100%;
+}
+
+.player__video {
+  width: 100%;
+  height: 100%;
+}
+
+.player__button {
+  background:none;
+  border:0;
+  line-height:1;
+  color:white;
+  text-align: center;
+  outline:0;
+  padding: 0;
+  cursor:pointer;
+  max-width:40px;
+}
+
+
+.player__button:focus {
+  border-color: #ffc600;
+}
+
+.player__slider {
+  width:10px;
+  height:30px;
+}
+
+.player__controls {
+  display:flex;
+  position: absolute;
+  left: 0;
+  bottom:0;
+  width: 100%;
+  /* transform: translateY(100%) translateY(0px); */
+  /* transition:all .3s; */
+  flex-wrap:wrap;
+  background:rgba(0,0,0,0.4);
+  color: #fff;
+  z-index: 2147483648; 
+  /* This is ridiculous so that it overrides the shadow 
+  dom and shows the custom player in full screen mode instead */
+}
+
+.player:hover .player__controls {
+  /* transform: translateY(0); */
+}
+
+
+.player__controls > * {
+  margin-left: 10px;
+}
+
+
+/* video input list menu */
+
+.video-input-list-group .video-input-list > *{
+  padding:3px;
+}
+
+.video-input-list-group:hover .video-input-list{
+  display: inline;
+}
+.video-input-list-item:hover {
+  background: #007bff
+}
+.video-input-list-group {
+  max-width:40px;
+}
+
+.video-input-list-group .video-input-list {
+  font-size: 12px;
+  position: absolute;
+  display: none;
+  max-width: 350px;
+  height: auto;
+  overflow-y: scroll;
+  bottom: 23px;
+  left: 25px;
+  background: rgba(0,0,0,0.5);
+  border-radius: 5px;
+  right: 0;
+}
+
+/* audio input list menu */
+
+
+.audio-input-list-group .audio-input-list > *{
+   padding:3px;
+}
+
+.audio-input-list-group:hover .audio-input-list{
+  display: inline;
+}
+.audio-input-list-item:hover {
+  background: #007bff
+}
+.audio-input-list-group {
+  max-width:40px;
+}
+
+.audio-input-list-group .audio-input-list {
+  font-size: 12px;
+  position: absolute;
+  display: none;
+  max-width: 250px;
+  height: auto;
+  overflow-y: scroll;
+  bottom: 23px;
+  left: 50px;
+  background: rgba(0,0,0,0.5);
+  border-radius: 5px;
+  right: 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* .current,
+.duration,
+.fullscreen-btn {
+  max-width: 35px;
+  color: #fff;
+  font-size: 10px;
+  margin: auto 0px;
+  padding: 0 7px;
+}
+*/
+.fullscreen-btn {
+  position: absolute;
+  right:0px;
+  bottom: 3px;
+  color:white;
+  margin: auto 6px;
+  border-radius: 2px;
+  border: 0;
+} 
+
+.setting-groups{
+  position: absolute;
+  right:21px;
+  bottom: -1px;
+  color:white;
+  margin: auto 6px;
+  border-radius: 2px;
+  border: 0;
+}
+.setting-list{
+  font-size: 13px;
+  position: absolute;
+  display:none;
+  width: 90px;
+  height: auto;
+  bottom: 25px;
+  background: rgba(0,0,0,0.5);
+  border-radius: 2px;
+  right: 0px;
+}
+.setting-groups:hover .setting-list{
+  display: inline;
+}
+.setting-list >*{
+  padding: 1px;
+ }
+.setting-list >*:hover {
+ background: #007bff;
+}
+.codec-input-list:hover .codec-input-list-item{
+  display: inline;
+}
+.codec-input-list-item:hover{
+  background: #007bff;
+}
+.codec-input-list-h264 {
+  font-size: 13px;
+  position: absolute;
+  display:none;
+  width: 75px;
+  bottom: 66px;
+  background: rgba(0,0,0,0.5);
+  right: 170px;
+}
+
+.codec-input-list-vp8 {
+  font-size: 13px;
+  position: absolute;
+  display:none;
+  width: 75px;
+  bottom: 33.5px;
+  background: rgba(0,0,0,0.5);
+  right: 170px;
+}
+
+.codec-input-list-vp9 {
+  font-size: 13px;
+  position: absolute;
+  display:none;
+  width: 75px;
+  bottom: 0px;
+  background: rgba(0,0,0,0.5);
+  right: 170px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+video::-webkit-media-controls {
+  display:none !important;
+}
