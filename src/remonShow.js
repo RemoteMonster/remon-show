@@ -4,19 +4,20 @@ import body from './body';
 
 class RemonShow extends HTMLElement {
     constructor() {
-        // 클래스 초기화.
         super();
+        this.listener= undefined;
     }
     async connectedCallback() {
         // Dom 에 추가 된 후 
         const remonShow = document.querySelector('remon-show');
+        let listener= undefined;
         remonShow.innerHTML = body;
 
         let remon;
         const config = {
             credential: {
-                key: '1234567890',
-                serviceId: 'SERVICEID1'
+                key: remonShow.getAttribute("key")?remonShow.getAttribute("key"):'1234567890',
+                serviceId: remonShow.getAttribute("serviceId")?remonShow.getAttribute("serviceId"):'SERVICEID1'
             },
             view: {
                 remote: '#remoteVideo',
@@ -24,31 +25,36 @@ class RemonShow extends HTMLElement {
             },
             media: {
                 audio: true,
-                video: true
+                video: {codec:'H264'}
             }
         };
-        const listener = {
-            onCreateChannel(chid) {
-                console.log(`EVENT FIRED: onConnect: ${chid}`);
-            },
-            onComplete() {
-                console.log('EVENT FIRED: onComplete');
-            },
-            onDisconnectChannel() {
-                // is called when other peer hang up.
-                console.log("some viewer is exited")
-            },
-            onClose() {
-                // is called when remon.close() method is called.
-                console.log('EVENT FIRED: onClose');
-            },
-            onError(error) {
-                console.log(`EVENT FIRED: onError: ${error}`);
-            },
-            onStat(result) {
-                console.log(`EVENT FIRED: onStat: ${result}`);
-            }
-        };
+        if (remonShow.getAttribute("listener")){
+            let listenerName= remonShow.getAttribute("listener");
+            listener = eval(listenerName);
+        }else{
+            listener = {
+                onCreateChannel(chid) {
+                    console.log(`EVENT FIRED: onConnect: ${chid}`);
+                },
+                onComplete() {
+                    console.log('EVENT FIRED: onComplete');
+                },
+                onDisconnectChannel() {
+                    // is called when other peer hang up.
+                    console.log("some viewer is exited")
+                },
+                onClose() {
+                    // is called when remon.close() method is called.
+                    console.log('EVENT FIRED: onClose');
+                },
+                onError(error) {
+                    console.log(`EVENT FIRED: onError: ${error}`);
+                },
+                onStat(result) {
+                    console.log(`EVENT FIRED: onStat: ${result}`);
+                }
+            };
+        }
 
         window.addEventListener('DOMContentLoaded', async function(){
             let devices = await navigator.mediaDevices.enumerateDevices();
@@ -141,14 +147,14 @@ class RemonShow extends HTMLElement {
 
         // Update button on play/pause
         function togglePlay() {
-            if(toggle.firstChild.className !== "fas fa-play fa-1x"){
-                toggle.firstChild.className = "fas fa-play fa-1x";
+            if(toggle.firstChild.nodeValue !== "▶"){
+                toggle.firstChild.nodeValue = "▶";
                 remon.close();
                 codecSelector.disabled =false;
                 fpsSelector.disabled =false;
                 resolutionSelector.disabled =false;
             }else{
-                toggle.firstChild.className = "fas fa-stop-circle fa-1x"
+                toggle.firstChild.nodeValue = "⏹"
                 remon = new Remon({config, listener});
                 remon.createCast('testchannel123');
                 codecSelector.disabled =true;
@@ -171,35 +177,22 @@ class RemonShow extends HTMLElement {
         }
 
         function showList(styleClass){
-            const displayStyle = player.querySelector(styleClass).style.display;
+            let displayStyle = player.querySelector(styleClass).style.display;
             displayStyle = (!displayStyle || displayStyle === 'none')? "inline":"";
         }
 
         function changeCodec(){
-            if(typeof config.media.video !== "object"){
-                config.media.video =  {codec:codecSelector.options[codecSelector.selectedIndex].value};
-            }else{
-                config.media.video.codec = codecSelector.options[codecSelector.selectedIndex].value;
-            }
+            config.media.video.codec = codecSelector.options[codecSelector.selectedIndex].value;
         }
 
         function changeFrameRate(){
-            if(typeof config.media.video !== "object"){
-                config.media.video =  {frameRate:{ min :fpsSelector.options[fpsSelector.selectedIndex].value}};
-            }else{
-                config.media.video.frameRate = {min:fpsSelector.options[fpsSelector.selectedIndex].value};
-            }
+            config.media.video.frameRate = {min:fpsSelector.options[fpsSelector.selectedIndex].value};
         }
         
         function changeResolution(){
             let resolution = resolutionSelector.options[resolutionSelector.selectedIndex].value.split('x')
-            if(typeof config.media.video !== "object"){
-                config.media.video =  { width:{ min :resolution[0]},
-                                        height:{min:resolution[1]}};
-            }else{
-                config.media.video.width =  {min :resolution[0]};
-                config.media.video.height = {min : resolution[1]};
-            }
+            config.media.video.width =  {min :resolution[0]};
+            config.media.video.height = {min : resolution[1]};
         }
 
         resolutionSelector.addEventListener('change',changeResolution);
