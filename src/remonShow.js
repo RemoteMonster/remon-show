@@ -25,6 +25,8 @@ class remonShow extends HTMLElement {
                         </div>
                     </div>
 
+
+
                     <div class = "setting-groups">
                         <button class="player__button setting-button" title="setting"><i class="fas fa-cog fa-1x"></i> 
                         </button>
@@ -32,24 +34,24 @@ class remonShow extends HTMLElement {
 
                             <div class = "codec-input-list">
                                 <select class="codec-input-selector" >
-                                    <option>Codec</option>
+                                    <option selected disabled>Codec</option>
                                     <option value="h264">H264</option>
-                                    <option value="VP8">VP8</option>
-                                    <option value="VP9">VP9</option>
+                                    <option value="vp8">VP8</option>
+                                    <option value="vp9">VP9</option>
                                 </select>
                             </div>
 
                             <div class = "fps-input-list">
                                 <select class="fps-input-selector">
-                                    <option>FPS</option>
-                                    <option>25</option>
+                                    <option selected disabled>FPS</option>
+                                    <option value="25">25</option>
                                 </select>
                             </div>
 
                             <div class = "resolution-input-list">
                                 <select class="resolution-input-selector">
-                                    <option>Resolution</option>
-                                    <option>1280 x 720</option>
+                                    <option selected disabled>Resolution</option>
+                                    <option value="1280x720">1280 x 720</option>
                                 </select>
                             </div>
 
@@ -187,6 +189,7 @@ class remonShow extends HTMLElement {
         const toggle       =  player.querySelector('.toggle');
         const codecSelector = player.querySelector('.codec-input-selector');
         const fpsSelector = player.querySelector('.fps-input-selector');
+        const resolutionSelector = player.querySelector('.resolution-input-selector');
         const fullscreen   =  player.querySelector('.fullscreen-btn');
 
         // toggle play/pause
@@ -268,9 +271,21 @@ class remonShow extends HTMLElement {
                 config.media.video.frameRate = {min:fpsSelector.options[fpsSelector.selectedIndex].value};
             }
         }
+        
+        function changeResolution(){
+            let resolution = resolutionSelector.options[resolutionSelector.selectedIndex].value.split('x')
+            if(typeof config.media.video !== "object"){
+                config.media.video =  { width:{ min :resolution[0]},
+                                        height:{min:resolution[1]}};
+            }else{
+                config.media.video.width =  {min :resolution[0]};
+                config.media.video.height = {min : resolution[1]};
+            }
+            console.log(config.media.video)
+        }
 
 
-
+        resolutionSelector.addEventListener('change',changeResolution);
         fpsSelector.addEventListener('change',changeFrameRate);
         codecSelector.addEventListener('change',changeCodec);
         video.addEventListener('click', screenClick);
