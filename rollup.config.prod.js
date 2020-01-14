@@ -1,14 +1,16 @@
 import { terser } from "rollup-plugin-terser";
 import resolve from "rollup-plugin-node-resolve";
 import commonjs from "rollup-plugin-commonjs";
-
+import postcss from "rollup-plugin-postcss";
+import cssimport from 'postcss-import';
+import autoprefixer from 'autoprefixer';
 
 export default [
   {
     input: "src/RemonShow.js",
     output: {
       format: "umd",
-      file: "dist/RemonShow.min.js",
+      file: "dist/RemonShow-mini.min.js",
       name: "RemonShow"
     },
     plugins: [
@@ -18,7 +20,10 @@ export default [
         browser: true
       }),
       commonjs({ include: "node_modules/**" }),
-      terser()
+      terser(),
+      postcss({
+        plugins: [cssimport(), autoprefixer()]
+      })
     ]
   },
   

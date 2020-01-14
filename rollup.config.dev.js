@@ -33,7 +33,7 @@ export default {
     serve({
       /*http test (host is your local ip)*/
       //host : '172.30.1.44',
-      contentBase: ["dist", "src"]
+      contentBase: ["dist", "dev"]
     }),
     livereload("dist"),
     postcss({
