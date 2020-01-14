@@ -18,6 +18,7 @@ class RemonShow extends HTMLElement {
         this.fullscreen;
         this.remon;
         this.config;
+        this.channelId;
 
         this.boundDomLoaded= this.domLoaded.bind(this);
 
@@ -110,6 +111,7 @@ class RemonShow extends HTMLElement {
                 video: {codec:'H264'}
             }
         };
+        this.channelId= remonShow.getAttribute('channelId');
         if (remonShow.getAttribute("listener")){
             let listenerName= remonShow.getAttribute("listener");
             this.listener = eval(listenerName);
@@ -117,21 +119,6 @@ class RemonShow extends HTMLElement {
             this.listener = {
                 onCreateChannel(chid) {
                     console.log(`EVENT FIRED: onConnect: ${chid}`);
-                },
-                onComplete() {
-                    console.log('EVENT FIRED: onComplete');
-                },
-                onDisconnectChannel() {
-                    console.log("some viewer is exited")
-                },
-                onClose() {
-                    console.log('EVENT FIRED: onClose');
-                },
-                onError(error) {
-                    console.log(`EVENT FIRED: onError: ${error}`);
-                },
-                onStat(result) {
-                    console.log(`EVENT FIRED: onStat: ${result}`);
                 }
             };
         }
@@ -199,7 +186,7 @@ class RemonShow extends HTMLElement {
         }else{
             T.toggle.firstChild.nodeValue = "⏹"
             T.remon = new Remon({config:T.config, listener:T.listener});
-            T.remon.createCast('testchannel123');
+            T.remon.createCast(T.channelId?T.channelId:undefined);
             T.codecSelector.disabled =true;
             T.fpsSelector.disabled =true;
             T.resolutionSelector.disabled =true;
