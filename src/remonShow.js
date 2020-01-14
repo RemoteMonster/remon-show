@@ -204,10 +204,16 @@ class remonShow extends HTMLElement {
             if(toggle.firstChild.className !== "fas fa-play fa-1x"){
                 toggle.firstChild.className = "fas fa-play fa-1x";
                 remon.close();
+                codecSelector.disabled =false;
+                fpsSelector.disabled =false;
+                resolutionSelector.disabled =false;
             }else{
                 toggle.firstChild.className = "fas fa-stop-circle fa-1x"
                 remon = new Remon({config, listener});
                 remon.createCast('testchannel123');
+                codecSelector.disabled =true;
+                fpsSelector.disabled =true;
+                resolutionSelector.disabled =true;
             }
         }
 
