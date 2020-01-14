@@ -4,6 +4,7 @@
   "description": "",
   "main": "remonShow-mini.js",
   "scripts": {
+    "dev": "rollup -c rollup.config.dev.js --watch",
     "build": "rollup -c rollup.config.prod.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -12,7 +13,9 @@
   "dependencies": {
     "rollup": "^1.29.0",
     "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-livereload": "^1.0.4",
     "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-serve": "^1.0.1",
     "rollup-plugin-terser": "^5.2.0"
   }
 }

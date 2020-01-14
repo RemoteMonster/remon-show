@@ -281,7 +281,6 @@ class remonShow extends HTMLElement {
                 config.media.video.width =  {min :resolution[0]};
                 config.media.video.height = {min : resolution[1]};
             }
-            console.log(config.media.video)
         }
 
 
