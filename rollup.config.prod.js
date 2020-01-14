@@ -5,11 +5,11 @@ import commonjs from "rollup-plugin-commonjs";
 
 export default [
   {
-    input: "src/remonShow.js",
+    input: "src/RemonShow.js",
     output: {
       format: "umd",
-      file: "dist/remonShow.min.js",
-      name: "remonShow"
+      file: "dist/RemonShow.min.js",
+      name: "RemonShow"
     },
     plugins: [
       resolve({
