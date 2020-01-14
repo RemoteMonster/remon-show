@@ -9,7 +9,6 @@
     <!-- Custom styles for this template-->
     <script src="RemonShow-mini.js"></script>
     <script>
-        var test = "dsfsdfsdfdsfs";
         var myListener = {
             onCreateChannel(chid) {
                 console.log(`EVENT FIRED: onConnect: ${chid}`);
@@ -36,11 +35,10 @@
 </head>
 
 <body id="page-top">
-    <!-- Main Content -->
     <div id="content">
         <h1>Remote Video Tag</h1>
         <div style="width:640px; height:480px;">
-            <remon-show key="1234567890" serviceId="SERVICEID1" listener="myListener"></remon-show>
+            <remon-show key="1234567890" serviceId="SERVICEID1" listener="myListener" channelId="testRemonShow"></remon-show>
         </div>
     </div>
 </body>
