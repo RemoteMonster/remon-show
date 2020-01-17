@@ -34,15 +34,18 @@
 </head>
 
 <body id="page-top" 
-    style="background-image: url( 'img/webinar.png' );
-    background-repeat: no-repeat;
-    background-size:cover">
-    <div id="content">
-        <h1>Remote Video Tag</h1>
-        <div style="position: absolute; right:0em; bottom:0em;width:640px; height:480px;">
-            <remon-show key="1234567890" serviceId="SERVICEID1" listener="myListener" channelId="testRemonShow"></remon-show>
-        </div>
-    </div>
+style="background-image: url( 'img/webinar.png' );
+background-repeat: no-repeat;
+background-size:cover">
+<div id="content">
+  <h1>Remote Video Tag</h1>
+  <div style="position: absolute; right:0em; bottom:0em;width:640px; height:480px;">
+  <remon-show key="1234567890" serviceId="SERVICEID1" 
+    listener="myListener" channelId="testRemonShow"
+    poster="img/poster.jpg">
+  </remon-show>
+  </div>
+</div>
 </body>
 
 </html>

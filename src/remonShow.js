@@ -19,13 +19,13 @@ class RemonShow extends HTMLElement {
     this.remon;
     this.config;
     this.channelId;
+    this.poster;
 
     this.domLoaded= this.domLoaded.bind(this);
     this.parsingAttr= this.parsingAttr.bind(this);
 
   }
   parsingAttr(remonShow){
-    console.log(`parsingAttr ${JSON.stringify(this)}`);
     this.channelId= remonShow.getAttribute('channelId');
     if (remonShow.getAttribute("listener")){
       this.listener= eval(remonShow.getAttribute("listener"));
@@ -36,53 +36,15 @@ class RemonShow extends HTMLElement {
         }
       };
     }
+    this.poster= (remonShow.getAttribute('poster'))? remonShow.getAttribute('poster'):null;
   }
   async updateInput(item){
-    console.log('this:');
-    console.log(this);
-    console.log(item);
-    if(item.deviceKind ==="videoinput"){
-      if (!this.remon || !this.remon.context.peerConnection){
-        console.warn('no media to stream.');
-      }else{
-        this.player.querySelectorAll('.video-input-list-item').forEach(function(node){
-          if(item.id !== node.id){node.style.background = "rgba(0,0,0,0.5)"}
-        })
-        item.style.background = "#007bff";
-
-        let selectedVideoStream= await navigator.mediaDevices.getUserMedia(this.config.media);
-        localVideo.srcObject=selectedVideoStream;
-        localVideo.play();
-        let selectedVideoTrack = selectedVideoStream.getVideoTracks()[0];
-        let sender = this.remon.context.peerConnection.getSenders().find(function(s) {
-          return s.track.kind == selectedVideoTrack.kind;
-        });
-        sender.replaceTrack(selectedVideoTrack);
-        console.log(selectedVideoTrack.kind + " is changed");
-      }
-    }else if(item.deviceKind ==="audioinput"){
-      if (!this.remon || !this.remon.context.peerConnection){
-        console.warn('no media to stream.');
-      }else{
-        this.player.querySelectorAll('.audio-input-list-item').forEach(function(node){
-          if(item.id !== node.id){node.style.background = "rgba(0,0,0,0.5)"}
-        })
-        item.style.background = "#007bff";
-
-        let selectedAudioStream= await navigator.mediaDevices.getUserMedia(this.config.media);
-        localVideo.srcObject=selectedAudioStream;
-        localVideo.play();
-        let selectedAudioTrack = selectedAudioStream.getAudioTracks()[0];
-        let sender = this.remon.context.peerConnection.getSenders().find(function(s) {
-          return s.track.kind == selectedAudioTrack.kind;
-        });
-        sender.replaceTrack(selectedAudioTrack);
-        console.log(selectedAudioTrack.kind + " is changed");
-      }
-    }
+    this.player.querySelectorAll(`.${item.deviceKind.substring(0,5)}-input-list-item`).forEach(function(node){
+      if(item.id !== node.id){node.style.background = "rgba(0,0,0,0.5)"}
+    })
+    item.style.background = "#007bff";
   }
   async domLoaded(){
-    console.log(`domLoaded ${JSON.stringify(this)}`);
     let devices = await navigator.mediaDevices.enumerateDevices();
     for (let i = 0; i < devices.length; i++) {
       let device = devices[i];
@@ -94,24 +56,26 @@ class RemonShow extends HTMLElement {
       if (device.kind === "videoinput") {
         div.className = "video-input-list-item"
         div.onclick = (e)=>{
-          console.log(`video click: ${JSON.stringify(e)}`);
-          console.log(e);
-          this.config.media.video = {deviceId:device.deviceId};
-          this.updateInput(e.target);
+          if(this.remon){
+            this.remon.setVideoDevice(device.deviceId);
+          }else{
+            this.config.media.video.deviceId= device.deviceId;
+            this.updateInput(e.target);
+          }
         }
         this.player.querySelector('.video-input-list').appendChild(div);
       } else if (device.kind === "audioinput") {
         div.className = "audio-input-list-item"
         div.onclick = (e)=>{
-          this.config.media.audio = {deviceId:device.deviceId}
-          this.updateInput(e.target);
+          if(this.remon){
+            this.remon.setAudioDevice(device.deviceId);
+          }else{
+            this.config.media.audio.deviceId= device.deviceId;
+            this.updateInput(e.target);
+          }
         }
         this.player.querySelector('.audio-input-list').appendChild(div);
       }
-    }
-
-    async function updateInput(item){
-      
     }
   }
   async connectedCallback() {
@@ -129,7 +93,12 @@ class RemonShow extends HTMLElement {
         local: '#localVideo'
       },
       media: {
-        audio: true,
+        audio: {sampleSize: 8, 
+          echoCancellation:false, 
+          channelCount:2,
+          autoGainControl: false,
+          noiseSuppression: false
+          },
         video: {codec:'H264'}
       }
     };
@@ -138,6 +107,7 @@ class RemonShow extends HTMLElement {
 
     this.player=  document.querySelector('.player');
     this.video=  this.player.querySelector('.viewer');
+    this.video.poster= this.poster? this.poster:null;
     this.videoInputListButton = this.player.querySelector('.video-input-list-button');
     this.audioInputListButton = this.player.querySelector('.audio-input-list-button');
     this.settingButton = this.player.querySelector('.setting-button');
