@@ -20,11 +20,12 @@ class RemonShow extends HTMLElement {
     this.config;
     this.channelId;
 
-    this.boundDomLoaded= this.domLoaded.bind(this);
-    this.boundParsingAttr= this.parsingAttr.bind(this);
+    this.domLoaded= this.domLoaded.bind(this);
+    this.parsingAttr= this.parsingAttr.bind(this);
 
   }
   parsingAttr(remonShow){
+    console.log(`parsingAttr ${JSON.stringify(this)}`);
     this.channelId= remonShow.getAttribute('channelId');
     if (remonShow.getAttribute("listener")){
       this.listener= eval(remonShow.getAttribute("listener"));
@@ -36,7 +37,52 @@ class RemonShow extends HTMLElement {
       };
     }
   }
+  async updateInput(item){
+    console.log('this:');
+    console.log(this);
+    console.log(item);
+    if(item.deviceKind ==="videoinput"){
+      if (!this.remon || !this.remon.context.peerConnection){
+        console.warn('no media to stream.');
+      }else{
+        this.player.querySelectorAll('.video-input-list-item').forEach(function(node){
+          if(item.id !== node.id){node.style.background = "rgba(0,0,0,0.5)"}
+        })
+        item.style.background = "#007bff";
+
+        let selectedVideoStream= await navigator.mediaDevices.getUserMedia(this.config.media);
+        localVideo.srcObject=selectedVideoStream;
+        localVideo.play();
+        let selectedVideoTrack = selectedVideoStream.getVideoTracks()[0];
+        let sender = this.remon.context.peerConnection.getSenders().find(function(s) {
+          return s.track.kind == selectedVideoTrack.kind;
+        });
+        sender.replaceTrack(selectedVideoTrack);
+        console.log(selectedVideoTrack.kind + " is changed");
+      }
+    }else if(item.deviceKind ==="audioinput"){
+      if (!this.remon || !this.remon.context.peerConnection){
+        console.warn('no media to stream.');
+      }else{
+        this.player.querySelectorAll('.audio-input-list-item').forEach(function(node){
+          if(item.id !== node.id){node.style.background = "rgba(0,0,0,0.5)"}
+        })
+        item.style.background = "#007bff";
+
+        let selectedAudioStream= await navigator.mediaDevices.getUserMedia(this.config.media);
+        localVideo.srcObject=selectedAudioStream;
+        localVideo.play();
+        let selectedAudioTrack = selectedAudioStream.getAudioTracks()[0];
+        let sender = this.remon.context.peerConnection.getSenders().find(function(s) {
+          return s.track.kind == selectedAudioTrack.kind;
+        });
+        sender.replaceTrack(selectedAudioTrack);
+        console.log(selectedAudioTrack.kind + " is changed");
+      }
+    }
+  }
   async domLoaded(){
+    console.log(`domLoaded ${JSON.stringify(this)}`);
     let devices = await navigator.mediaDevices.enumerateDevices();
     for (let i = 0; i < devices.length; i++) {
       let device = devices[i];
@@ -47,61 +93,25 @@ class RemonShow extends HTMLElement {
 
       if (device.kind === "videoinput") {
         div.className = "video-input-list-item"
-        div.onclick = function(){
+        div.onclick = (e)=>{
+          console.log(`video click: ${JSON.stringify(e)}`);
+          console.log(e);
           this.config.media.video = {deviceId:device.deviceId};
-          updateInput(this);
+          this.updateInput(e.target);
         }
         this.player.querySelector('.video-input-list').appendChild(div);
       } else if (device.kind === "audioinput") {
         div.className = "audio-input-list-item"
-        div.onclick = function(){
+        div.onclick = (e)=>{
           this.config.media.audio = {deviceId:device.deviceId}
-          updateInput(this);
+          this.updateInput(e.target);
         }
         this.player.querySelector('.audio-input-list').appendChild(div);
       }
     }
 
     async function updateInput(item){
-      if(item.deviceKind ==="videoinput"){
-        if(this.remon.context.peerConnection){
-          this.player.querySelectorAll('.video-input-list-item').forEach(function(node){
-            if(item.id !== node.id){node.style.background = "rgba(0,0,0,0.5)"}
-          })
-          item.style.background = "#007bff";
-
-          let selectedVideoStream= await navigator.mediaDevices.getUserMedia(this.config.media);
-          localVideo.srcObject=selectedVideoStream;
-          localVideo.play();
-          let selectedVideoTrack = selectedVideoStream.getVideoTracks()[0];
-          let sender = this.remon.context.peerConnection.getSenders().find(function(s) {
-            return s.track.kind == selectedVideoTrack.kind;
-          });
-          sender.replaceTrack(selectedVideoTrack);
-          console.log(selectedVideoTrack.kind + " is changed");
-        }else{
-          console.log("방송중이 아닙니다.");
-        }
-      }else if(item.deviceKind ==="audioinput"){
-        if(this.remon.context.peerConnection){
-          this.player.querySelectorAll('.audio-input-list-item').forEach(function(node){
-            if(item.id !== node.id){node.style.background = "rgba(0,0,0,0.5)"}
-          })
-          item.style.background = "#007bff";
-
-          let selectedAudioStream= await navigator.mediaDevices.getUserMedia(this.config.media);
-          localVideo.srcObject=selectedAudioStream;
-          localVideo.play();
-          let selectedAudioTrack = selectedAudioStream.getAudioTracks()[0];
-          let sender = this.remon.context.peerConnection.getSenders().find(function(s) {
-            return s.track.kind == selectedAudioTrack.kind;
-          });
-          sender.replaceTrack(selectedAudioTrack);
-          console.log(selectedAudioTrack.kind + " is changed");
-        }else{
-          console.log("방송중이 아닙니다.");
-        }
-      }
+      
     }
   }
   async connectedCallback() {
@@ -123,8 +133,8 @@ class RemonShow extends HTMLElement {
         video: {codec:'H264'}
       }
     };
-    this.boundParsingAttr(remonShow);
-    window.addEventListener('DOMContentLoaded', this.boundDomLoaded);
+    this.parsingAttr(remonShow);
+    window.addEventListener('DOMContentLoaded', this.domLoaded);
 
     this.player=  document.querySelector('.player');
     this.video=  this.player.querySelector('.viewer');
