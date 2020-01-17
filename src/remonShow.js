@@ -21,7 +21,20 @@ class RemonShow extends HTMLElement {
     this.channelId;
 
     this.boundDomLoaded= this.domLoaded.bind(this);
+    this.boundParsingAttr= this.parsingAttr.bind(this);
 
+  }
+  parsingAttr(remonShow){
+    this.channelId= remonShow.getAttribute('channelId');
+    if (remonShow.getAttribute("listener")){
+      this.listener= eval(remonShow.getAttribute("listener"));
+    }else{
+      this.listener = {
+        onCreateChannel(chid) {
+          console.log(`EVENT FIRED: onConnect: ${chid}`);
+        }
+      };
+    }
   }
   async domLoaded(){
     let devices = await navigator.mediaDevices.enumerateDevices();
@@ -35,14 +48,14 @@ class RemonShow extends HTMLElement {
       if (device.kind === "videoinput") {
         div.className = "video-input-list-item"
         div.onclick = function(){
-          config.media.video = {deviceId:device.deviceId};
+          this.config.media.video = {deviceId:device.deviceId};
           updateInput(this);
         }
         this.player.querySelector('.video-input-list').appendChild(div);
       } else if (device.kind === "audioinput") {
         div.className = "audio-input-list-item"
         div.onclick = function(){
-          config.media.audio = {deviceId:device.deviceId}
+          this.config.media.audio = {deviceId:device.deviceId}
           updateInput(this);
         }
         this.player.querySelector('.audio-input-list').appendChild(div);
@@ -57,7 +70,7 @@ class RemonShow extends HTMLElement {
           })
           item.style.background = "#007bff";
 
-          let selectedVideoStream= await navigator.mediaDevices.getUserMedia(show.config.media);
+          let selectedVideoStream= await navigator.mediaDevices.getUserMedia(this.config.media);
           localVideo.srcObject=selectedVideoStream;
           localVideo.play();
           let selectedVideoTrack = selectedVideoStream.getVideoTracks()[0];
@@ -76,7 +89,7 @@ class RemonShow extends HTMLElement {
           })
           item.style.background = "#007bff";
 
-          let selectedAudioStream= await navigator.mediaDevices.getUserMedia(show.config.media);
+          let selectedAudioStream= await navigator.mediaDevices.getUserMedia(this.config.media);
           localVideo.srcObject=selectedAudioStream;
           localVideo.play();
           let selectedAudioTrack = selectedAudioStream.getAudioTracks()[0];
@@ -94,7 +107,6 @@ class RemonShow extends HTMLElement {
   async connectedCallback() {
     // Dom 에 추가 된 후 
     const remonShow = document.querySelector('remon-show');
-    let listener= undefined;
     remonShow.innerHTML = body;
 
     this.config = {
@@ -111,17 +123,7 @@ class RemonShow extends HTMLElement {
         video: {codec:'H264'}
       }
     };
-    this.channelId= remonShow.getAttribute('channelId');
-    if (remonShow.getAttribute("listener")){
-      let listenerName= remonShow.getAttribute("listener");
-      this.listener = eval(listenerName);
-    }else{
-      this.listener = {
-        onCreateChannel(chid) {
-          console.log(`EVENT FIRED: onConnect: ${chid}`);
-        }
-      };
-    }
+    this.boundParsingAttr(remonShow);
     window.addEventListener('DOMContentLoaded', this.boundDomLoaded);
 
     this.player=  document.querySelector('.player');
