@@ -8,14 +8,6 @@ class RemonShow extends HTMLElement {
     this.listener= undefined;
     this.player;
     this.video;
-    this.videoInputListButton;
-    this.audioInputListButton;
-    this.settingButton;
-    this.toggle;
-    this.codecSelector;
-    this.fpsSelector;
-    this.resolutionSelector;
-    this.fullscreen;
     this.remon;
     this.config;
     this.channelId;
@@ -23,7 +15,6 @@ class RemonShow extends HTMLElement {
 
     this.domLoaded= this.domLoaded.bind(this);
     this.parsingAttr= this.parsingAttr.bind(this);
-
   }
   parsingAttr(remonShow){
     this.channelId= remonShow.getAttribute('channelId');
@@ -38,13 +29,18 @@ class RemonShow extends HTMLElement {
     }
     this.poster= (remonShow.getAttribute('poster'))? remonShow.getAttribute('poster'):null;
   }
-  async updateInput(item){
+  async updateInputElementStyle(item){
     this.player.querySelectorAll(`.${item.deviceKind.substring(0,5)}-input-list-item`).forEach(function(node){
       if(item.id !== node.id){node.style.background = "rgba(0,0,0,0.5)"}
     })
     item.style.background = "#007bff";
   }
-  async domLoaded(){
+  async updateDevices(){
+    let element= _control('.video-input-list');
+    while(element && element.firstChild) element.removeChild(element.firstChild);
+    element= _control('.audio-input-list');
+    while(element && element.firstChild) element.removeChild(element.firstChild);
+
     let devices = await navigator.mediaDevices.enumerateDevices();
     for (let i = 0; i < devices.length; i++) {
       let device = devices[i];
@@ -60,10 +56,10 @@ class RemonShow extends HTMLElement {
             this.remon.setVideoDevice(device.deviceId);
           }else{
             this.config.media.video.deviceId= device.deviceId;
-            this.updateInput(e.target);
+            this.updateInputElementStyle(e.target);
           }
         }
-        this.player.querySelector('.video-input-list').appendChild(div);
+        _control('.video-input-list').appendChild(div);
       } else if (device.kind === "audioinput") {
         div.className = "audio-input-list-item"
         div.onclick = (e)=>{
@@ -71,12 +67,15 @@ class RemonShow extends HTMLElement {
             this.remon.setAudioDevice(device.deviceId);
           }else{
             this.config.media.audio.deviceId= device.deviceId;
-            this.updateInput(e.target);
+            this.updateInputElementStyle(e.target);
           }
         }
-        this.player.querySelector('.audio-input-list').appendChild(div);
+        _control('.audio-input-list').appendChild(div);
       }
     }
+  }
+  async domLoaded(){
+    this.updateDevices();
   }
   async connectedCallback() {
     // Dom 에 추가 된 후 
@@ -89,8 +88,7 @@ class RemonShow extends HTMLElement {
         serviceId: remonShow.getAttribute("serviceId")?remonShow.getAttribute("serviceId"):'SERVICEID1'
       },
       view: {
-        remote: '#remoteVideo',
-        local: '#localVideo'
+        remote: '#remoteVideo', local: '#localVideo'
       },
       media: {
         audio: {sampleSize: 8, 
@@ -105,28 +103,29 @@ class RemonShow extends HTMLElement {
     this.parsingAttr(remonShow);
     window.addEventListener('DOMContentLoaded', this.domLoaded);
 
-    this.player=  document.querySelector('.player');
-    this.video=  this.player.querySelector('.viewer');
+    this.player= document.querySelector('.player');
+    this.video= _control('.viewer');
     this.video.poster= this.poster? this.poster:null;
-    this.videoInputListButton = this.player.querySelector('.video-input-list-button');
-    this.audioInputListButton = this.player.querySelector('.audio-input-list-button');
-    this.settingButton = this.player.querySelector('.setting-button');
-    this.toggle=  this.player.querySelector('.toggle');
-    this.codecSelector= this.player.querySelector('.codec-input-selector');
-    this.fpsSelector= this.player.querySelector('.fps-input-selector');
-    this.resolutionSelector= this.player.querySelector('.resolution-input-selector');
-    this.fullscreen=  this.player.querySelector('.fullscreen-btn');
-
-    let that = this;
-    this.resolutionSelector.addEventListener('change',function(e){that._changeResolution(that)});
-    this.fpsSelector.addEventListener('change', function(e){that._changeFrameRate(that)});
-    this.codecSelector.addEventListener('change', function(e){that._changeCodec(that)});
-    this.video.addEventListener('click', function(e){that._screenClick(that)});
-    this.toggle.addEventListener('click', function(e){that._togglePlay(that)});
-    this.fullscreen.addEventListener('click', function(e){that._toggleFullscreen(that)});
-    this.videoInputListButton.addEventListener('click', function(e){that._showList(that, '.video-input-list')});
-    this.audioInputListButton.addEventListener('click', function(e){that._showList(this, '.audio-input-list')});
-    this.settingButton.addEventListener('click', function(e){that._showList(that, '.setting-list')});
+    this._prepareControlAction();
+  }
+  _prepareControlAction(){
+    _control('.video-input-list-button').
+      addEventListener('click', ()=> this._showList(this, '.video-input-list'));
+    _control('.audio-input-list-button').
+      addEventListener('click', ()=> this._showList(this, '.audio-input-list'));
+    _control('.setting-button').
+      addEventListener('click', ()=> this._showList(this, '.setting-list'));
+    _control('.toggle').addEventListener('click', ()=> this._togglePlay(this));
+    _control('.codec-input-selector').
+      addEventListener('change', ()=> this._changeCodec(this));
+    this.video.addEventListener('click', ()=>{this._screenClick(this)});
+    _control('.fps-input-selector').addEventListener('change', ()=> this._changeFrameRate(this));
+    _control('.resolution-input-selector').
+      addEventListener('change', ()=> this._changeResolution(this));
+    _control('.fullscreen-btn').addEventListener('click', ()=> this._toggleFullscreen(this));
+  }
+  _control(className){
+    return this.player.querySelector(className);
   }
   _changeResolution(T){
     let resolution = T.resolutionSelector.options[T.resolutionSelector.selectedIndex].value.split('x')
