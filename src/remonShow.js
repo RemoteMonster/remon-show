@@ -15,6 +15,12 @@ class RemonShow extends HTMLElement {
 
     this.domLoaded= this.domLoaded.bind(this);
     this.parsingAttr= this.parsingAttr.bind(this);
+    // this.funcs= [this.domLoaded, this.parsingAttr, this._togglePlay, this._screenClick, this._toggleFullscreen,
+    //   this._showList, this._changeCodec, this._changeFrameRate, this._changeResolution];
+    // this.funcs.map( fun => {
+    //     fun= fun.bind(this)
+    //   });
+    
   }
   parsingAttr(remonShow){
     this.channelId= remonShow.getAttribute('channelId');
@@ -29,28 +35,27 @@ class RemonShow extends HTMLElement {
     }
     this.poster= (remonShow.getAttribute('poster'))? remonShow.getAttribute('poster'):null;
   }
-  async updateInputElementStyle(item){
+  updateInputElementStyle(item){
     this.player.querySelectorAll(`.${item.deviceKind.substring(0,5)}-input-list-item`).forEach(function(node){
       if(item.id !== node.id){node.style.background = "rgba(0,0,0,0.5)"}
     })
     item.style.background = "#007bff";
   }
   async updateDevices(){
-    let element= _control('.video-input-list');
+    let element= this.ctrl('.video-input-list');
     while(element && element.firstChild) element.removeChild(element.firstChild);
-    element= _control('.audio-input-list');
+    element= this.ctrl('.audio-input-list');
     while(element && element.firstChild) element.removeChild(element.firstChild);
 
     let devices = await navigator.mediaDevices.enumerateDevices();
-    for (let i = 0; i < devices.length; i++) {
-      let device = devices[i];
+    devices.map(device => {
       let div = document.createElement('div');
       div.deviceKind = device.kind;
-      div.id = device.deviceId;
+      div.devId = device.deviceId;
       div.innerText = device.label;
 
       if (device.kind === "videoinput") {
-        div.className = "video-input-list-item"
+        div.className = "video-input-list-item";
         div.onclick = (e)=>{
           if(this.remon){
             this.remon.setVideoDevice(device.deviceId);
@@ -58,10 +63,12 @@ class RemonShow extends HTMLElement {
             this.config.media.video.deviceId= device.deviceId;
             this.updateInputElementStyle(e.target);
           }
+          div.parentElement.parentElement.parentElement.style.display="none";
         }
-        _control('.video-input-list').appendChild(div);
+        this.ctrl('.video-input-list').appendChild(div);
       } else if (device.kind === "audioinput") {
-        div.className = "audio-input-list-item"
+        div.className = "audio-input-list-item";
+        console.log(111);
         div.onclick = (e)=>{
           if(this.remon){
             this.remon.setAudioDevice(device.deviceId);
@@ -69,12 +76,16 @@ class RemonShow extends HTMLElement {
             this.config.media.audio.deviceId= device.deviceId;
             this.updateInputElementStyle(e.target);
           }
+          div.parentElement.parentElement.parentElement.style.display="none";
         }
-        _control('.audio-input-list').appendChild(div);
+        
+        this.ctrl('.audio-input-list').appendChild(div);
+        console.log (this.ctrl('.audio-input-list'));
       }
-    }
+    });
   }
   async domLoaded(){
+    console.log("리모트몬스터");
     this.updateDevices();
   }
   async connectedCallback() {
@@ -87,9 +98,7 @@ class RemonShow extends HTMLElement {
         key: remonShow.getAttribute("key")?remonShow.getAttribute("key"):'1234567890',
         serviceId: remonShow.getAttribute("serviceId")?remonShow.getAttribute("serviceId"):'SERVICEID1'
       },
-      view: {
-        remote: '#remoteVideo', local: '#localVideo'
-      },
+      view: {local: '#localVideo'},
       media: {
         audio: {sampleSize: 8, 
           echoCancellation:false, 
@@ -104,74 +113,87 @@ class RemonShow extends HTMLElement {
     window.addEventListener('DOMContentLoaded', this.domLoaded);
 
     this.player= document.querySelector('.player');
-    this.video= _control('.viewer');
+    this.video= this.ctrl('.viewer');
     this.video.poster= this.poster? this.poster:null;
     this._prepareControlAction();
   }
   _prepareControlAction(){
-    _control('.video-input-list-button').
-      addEventListener('click', ()=> this._showList(this, '.video-input-list'));
-    _control('.audio-input-list-button').
-      addEventListener('click', ()=> this._showList(this, '.audio-input-list'));
-    _control('.setting-button').
-      addEventListener('click', ()=> this._showList(this, '.setting-list'));
-    _control('.toggle').addEventListener('click', ()=> this._togglePlay(this));
-    _control('.codec-input-selector').
-      addEventListener('change', ()=> this._changeCodec(this));
-    this.video.addEventListener('click', ()=>{this._screenClick(this)});
-    _control('.fps-input-selector').addEventListener('change', ()=> this._changeFrameRate(this));
-    _control('.resolution-input-selector').
-      addEventListener('change', ()=> this._changeResolution(this));
-    _control('.fullscreen-btn').addEventListener('click', ()=> this._toggleFullscreen(this));
+    this.ctrl('.video-input-list-button').onclick = ()=> {
+      document.getElementById("videoInput-modal").style.display="block";
+    }
+    Array.prototype.filter.call(document.getElementsByClassName("close"), (el)=>{
+      el.onclick= () => el.parentElement.style.display="none";
+    });
+    this.ctrl('.audio-input-list-button').onclick = ()=> {
+      document.getElementById("audioInput-modal").style.display="block";
+    }
+    this.ctrl('.setting-button').onclick = ()=> {
+      document.getElementById("setting-modal").style.display="block";
+    }
+    this.ctrl('.toggle').onclick = ()=> this._togglePlay();
+    this.ctrl('.codec-input-selector').onclick = ()=> this._changeCodec();
+    this.video.onclick = ()=>{this._screenClick()};
+    this.ctrl('.fps-input-selector').addEventListener('change', ()=> this._changeFrameRate());
+    this.ctrl('.resolution-input-selector').onchange = ()=> this._changeResolution();
+    this.ctrl('.fullscreen-button').onclick = ()=> this._toggleFullscreen();
   }
-  _control(className){
+  ctrl(className){
     return this.player.querySelector(className);
   }
-  _changeResolution(T){
-    let resolution = T.resolutionSelector.options[T.resolutionSelector.selectedIndex].value.split('x')
-    T.config.media.video.width =  {min :resolution[0]};
-    T.config.media.video.height = {min : resolution[1]};
+  _changeResolution(){
+    let resolution = this.resolutionSelector.options[this.resolutionSelector.selectedIndex].value.split('x')
+    this.config.media.video.width =  {min :resolution[0]};
+    this.config.media.video.height = {min : resolution[1]};
   }
-  _changeFrameRate(T){
-    T.config.media.video.frameRate = {min:T.fpsSelector.options[T.fpsSelector.selectedIndex].value};
+  _changeFrameRate(){
+    this.config.media.video.frameRate = {min:this.fpsSelector.options[this.fpsSelector.selectedIndex].value};
   }
-  _changeCodec(T){
-    T.config.media.video.codec = T.codecSelector.options[T.codecSelector.selectedIndex].value;
+  _changeCodec(){
+    this.config.media.video.codec = this.codecSelector.options[this.codecSelector.selectedIndex].value;
   }
-  _showList(T, styleClass){
-    let displayStyle = T.player.querySelector(styleClass).style.display;
+  _showList(styleClass){
+    let displayStyle = this.player.querySelector(styleClass).style.display;
     displayStyle = (!displayStyle || displayStyle === 'none')? "inline":"";
   }
-  _toggleFullscreen(T) {
-    if (!T.player.fullscreenElement && T.player.requestFullscreen) {
-      T.player.requestFullscreen();
-    } else if (!T.player.mozRequestFullScreen && T.player.mozRequestFullScreen) {
+  _toggleFullscreen() {
+    if (!this.player.fullscreenElement && this.player.requestFullscreen) {
+      this.player.requestFullscreen();
+    } else if (!this.player.mozRequestFullScreen && this.player.mozRequestFullScreen) {
       player.mozRequestFullScreen();
-    } else if (!T.player.webkitRequestFullscreen && T.player.webkitRequestFullscreen) {
-      T.player.webkitRequestFullscreen();
-    } else if(!T.player.msRequestFullscreen && T.player.msRequestFullscreen){
-      T.player.msRequestFullscreen();
+    } else if (!this.player.webkitRequestFullscreen && this.player.webkitRequestFullscreen) {
+      this.player.webkitRequestFullscreen();
+    } else if(!this.player.msRequestFullscreen && this.player.msRequestFullscreen){
+      this.player.msRequestFullscreen();
     }
   }
-  _screenClick(T) {
-    const method = T.video.paused ? 'play' : 'pause';
-    T.video[method]();
+  _screenClick() {
+    const method = this.video.paused ? 'play' : 'pause';
+    this.video[method]();
   }
-  _togglePlay(T) {
-    if(T.toggle.firstChild.nodeValue !== "▶"){
-      T.toggle.firstChild.nodeValue = "▶";
-      T.remon.close();
-      T.codecSelector.disabled =false;
-      T.fpsSelector.disabled =false;
-      T.resolutionSelector.disabled =false;
+  _togglePlay() {
+    const toggle= this.ctrl('.toggle');
+    if(toggle.firstChild.nodeValue !== "▶"){
+      toggle.firstChild.nodeValue = "▶";
+      this.remon.close();
+      this.ctrl('.codecSelector').disabled =false;
+      this.ctrl('.fpsSelector').disabled =false;
+      this.ctrl('.resolutionSelector').disabled =false;
     }else{
-      T.toggle.firstChild.nodeValue = "⏹"
-      T.remon = new Remon({config:T.config, listener:T.listener});
-      T.remon.createCast(T.channelId?T.channelId:undefined);
-      T.codecSelector.disabled =true;
-      T.fpsSelector.disabled =true;
-      T.resolutionSelector.disabled =true;
+      toggle.firstChild.nodeValue = "⏹"
+      this.remon = new Remon({config:this.config, listener:this.listener});
+      this.remon.createCast(this.channelId?this.channelId:undefined);
+      this.ctrl('.codecSelector').disabled =true;
+      this.ctrl('.fpsSelector').disabled =true;
+      this.ctrl('.resolutionSelector').disabled =true;
     }
   }
+}
+function isInspectOpen()
+{
+  console.log('a')
+    console.profile(); 
+    console.profileEnd(); 
+    if (console.clear) console.clear();
+    return console.profiles.length > 0;
 }
 customElements.define('remon-show', RemonShow);
