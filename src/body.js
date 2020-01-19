@@ -7,14 +7,10 @@ const body = `
       <div class = "video-input-list-group player_button_group" >
         <button class="video-button video-input-list-button" title="Video Input">🎥
         </button>
-        
       </div>
-
       <div class = "audio-input-list-group player_button_group" >
         <button class="video-button audio-input-list-button" title="Audio Input">🎤
         </button>
-        <div class="audio-input-list" style = "height: auto; overflow-y: hidden;">
-        </div>
       </div>
       <div class="screenCapture-group player_button_group">
         <button data-title="screenCapture" class="video-button screenCapture-button" title="screen capture">💻

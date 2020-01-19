@@ -15,12 +15,6 @@ class RemonShow extends HTMLElement {
 
     this.domLoaded= this.domLoaded.bind(this);
     this.parsingAttr= this.parsingAttr.bind(this);
-    // this.funcs= [this.domLoaded, this.parsingAttr, this._togglePlay, this._screenClick, this._toggleFullscreen,
-    //   this._showList, this._changeCodec, this._changeFrameRate, this._changeResolution];
-    // this.funcs.map( fun => {
-    //     fun= fun.bind(this)
-    //   });
-    
   }
   parsingAttr(remonShow){
     this.channelId= remonShow.getAttribute('channelId');
@@ -48,7 +42,7 @@ class RemonShow extends HTMLElement {
     while(element && element.firstChild) element.removeChild(element.firstChild);
 
     let devices = await navigator.mediaDevices.enumerateDevices();
-    devices.map(device => {
+    devices.filter(d => !['communications', 'default'].includes(d.deviceId)).map(device => {
       let div = document.createElement('div');
       div.deviceKind = device.kind;
       div.devId = device.deviceId;
@@ -68,7 +62,6 @@ class RemonShow extends HTMLElement {
         this.ctrl('.video-input-list').appendChild(div);
       } else if (device.kind === "audioinput") {
         div.className = "audio-input-list-item";
-        console.log(111);
         div.onclick = (e)=>{
           if(this.remon){
             this.remon.setAudioDevice(device.deviceId);
@@ -78,9 +71,8 @@ class RemonShow extends HTMLElement {
           }
           div.parentElement.parentElement.parentElement.style.display="none";
         }
-        
+        console.log(div);
         this.ctrl('.audio-input-list').appendChild(div);
-        console.log (this.ctrl('.audio-input-list'));
       }
     });
   }
