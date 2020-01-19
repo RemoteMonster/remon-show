@@ -40,9 +40,9 @@ const body = `
   </div>
   <div id="toast"></div>
   <div id="channelInfoBar"></div>
-  <div id="videoInput-modal" class="modal">
+  <div id="videoInput-modal" class="left-modal">
     <span class="close">&times;</span>
-    <div class="modal-content">
+    <div class="modal-body">
       <h1>Video Input List</h1><br>
       <div class="video-input-list" style= "height: auto; overflow-y: hidden;">
       </div>
@@ -50,29 +50,29 @@ const body = `
   </div>
   <div id="test-modal" class="full-modal">
     <span class="close">&times;</span>
-    <div class="modal-content">
+    <div class="modal-body">
       <iframe style="width:100%;height:100%;" allow="microphone;camera" src='https://test.webrtc.org/'></iframe>
     </div>
   </div>
   <div id="quality-modal" class="right-top-modal">
     <span class="close">&times;</span>
-    <div class="modal-content">
+    <div class="modal-body">
       <h1>Stat</h1><br>
       <div class="stat-box" style= "height: auto; overflow-y: hidden;">
       </div>
     </div>
   </div>
-  <div id="audioInput-modal" class="modal">
+  <div id="audioInput-modal" class="left-modal">
     <span class="close">&times;</span>
-    <div class="modal-content">
+    <div class="modal-body">
       <h1>Audio Input List</h1><br>
       <div class="audio-input-list" style= "height: auto; overflow-y: hidden;">
       </div>
     </div>
   </div>
-  <div id="setting-modal" class="modal">
+  <div id="setting-modal" class="left-modal">
     <span class="close">&times;</span>
-    <div class="modal-content">
+    <div class="modal-body">
       <h1>Setting</h1><br>
       <div class="setting-list">
         <div class="codec-input-list">Codec: &nbsp;

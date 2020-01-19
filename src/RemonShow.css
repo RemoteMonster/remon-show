@@ -148,7 +148,7 @@ button::before{
   right: 0;
 }
 
-.modal-content{
+.modal-body{
   /* background-color: #fefefe; */
   margin: auto;
   padding: 20px 0px 0px 0px;
@@ -158,7 +158,7 @@ button::before{
   color:white;
 }
 
-.modal{
+.left-modal{
   display: none; /* Hidden by default */
   position: absolute; 
   z-index: 1; /* Sit on top */
