@@ -1,6 +1,6 @@
 import style from './RemonShow.css';
 import Remon from '@remotemonster/sdk';
-import body from './body';
+import castBody from './castBody';
 
 class RemonShow extends HTMLElement {
   constructor() {
@@ -86,13 +86,13 @@ class RemonShow extends HTMLElement {
   }
   async connectedCallback() {
     // Dom 에 추가 된 후 
-    const remonShow = document.querySelector('remon-show');
-    remonShow.innerHTML = body;
+    const remonCast = document.querySelector('remon-cast');
+    remonCast.innerHTML = castBody;
 
     this.config = {
       credential: {
-        key: remonShow.getAttribute("key")?remonShow.getAttribute("key"):'1234567890',
-        serviceId: remonShow.getAttribute("serviceId")?remonShow.getAttribute("serviceId"):'SERVICEID1'
+        key: remonCast.getAttribute("key")?remonCast.getAttribute("key"):'1234567890',
+        serviceId: remonCast.getAttribute("serviceId")?remonCast.getAttribute("serviceId"):'SERVICEID1'
       },
       view: {local: '#localVideo'},
       media: {
@@ -105,7 +105,7 @@ class RemonShow extends HTMLElement {
         video: {codec:'H264'}
       }
     };
-    this.parsingAttr(remonShow);
+    this.parsingAttr(remonCast);
     window.addEventListener('DOMContentLoaded', this.domLoaded);
 
     this.player= document.querySelector('.player');
@@ -202,4 +202,4 @@ function isInspectOpen()
     if (console.clear) console.clear();
     return console.profiles.length > 0;
 }
-customElements.define('remon-show', RemonShow);
+customElements.define('remon-cast', RemonShow);
