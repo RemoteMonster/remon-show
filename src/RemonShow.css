@@ -19,12 +19,6 @@ html {
   overflow: hidden;
 }
 
-/* This css is only applied when fullscreen is active. */
-.player:fullscreen {
-  max-width: none;
-  width: 100%;
-}
-
 .player:-webkit-full-screen {
   max-width: none;
   width: 100%;
@@ -175,15 +169,6 @@ button::before{
   right: 0;
 }
 
-.fullscreen-button {
-  position: absolute;
-  right:0px;
-  bottom: 2px;
-  color:white;
-  margin: auto 6px;
-  border-radius: 2px;
-  border: 0;
-} 
 .modal-content{
   /* background-color: #fefefe; */
   margin: auto;
@@ -220,22 +205,36 @@ button::before{
 }
 .setting-groups{
   position: absolute;
-  right:21px;
+  right:1.5em;
   color:white;
   margin: auto 6px;
   border-radius: 2px;
   border: 0;
 }
-.setting-list{
-  font-size: 1em;
+.log-groups{
   position: absolute;
-  height: auto;
-  /* background: rgba(0,0,0,0.5); */
+  right:3.2em;
+  color:white;
+  margin: auto 6px;
   border-radius: 2px;
+  border: 0;
 }
-/* .setting-groups:hover .setting-list{
-  display: inline;
-} */
+.quality-groups{
+  position: absolute;
+  right:5em;
+  color:white;
+  margin: auto 6px;
+  border-radius: 2px;
+  border: 0;
+}
+.fullscreen-groups{
+  position: absolute;
+  right:0px;
+  color:white;
+  border-radius: 2px;
+  border: 0;
+}
+
 .setting-list >*{
   padding: 1px;
  }

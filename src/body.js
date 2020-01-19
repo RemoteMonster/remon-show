@@ -21,12 +21,20 @@ const body = `
       </div>
     </div>
     <div class="right-controls">
-      <div class = "setting-groups player_button_group">
+      <div class="quality-groups player_button_group">
+        <button data-title="quality(k)" class="video-button quality-button" title="Quality">%
+        </button>
+      </div>
+      <div class="log-groups player_button_group">
+        <button data-title="setting(k)" class="video-button log-button" title="Log">🗨
+        </button>
+      </div>
+      <div class="setting-groups player_button_group">
         <button data-title="setting(k)" class="video-button setting-button" title="setting">⚙
         </button>
       </div>
-      <div class="player_button_group">
-        <button class="video-button fullscreen-button">▢</button>
+      <div class="fullscreen-groups player_button_group">
+        <button class="video-button fullscreen-button">▣</button>
       </div>
     </div>
   </div>
@@ -50,22 +58,22 @@ const body = `
     <span class="close">&times;</span>
     <div class="modal-content">
       <h3>Setting</h3><br>
-      <div class = "setting-list">
-        <div class = "codec-input-list">
+      <div class="setting-list">
+        <div class="codec-input-list">
           <select class="codec-input-selector" >
           <option selected disabled>Codec</option>
-          <option  value="h264">H264</option>
+          <option value="h264">H264</option>
           <option value="vp8">VP8</option>
           <option value="vp9">VP9</option>
           </select>
         </div>
-        <div class = "fps-input-list">
+        <div class="fps-input-list">
           <select class="fps-input-selector">
             <option selected disabled>FPS</option>
             <option value="25">25</option>
           </select>
         </div>
-        <div class = "resolution-input-list">
+        <div class="resolution-input-list">
           <select class="resolution-input-selector">
             <option selected disabled>Resolution</option>
             <option value="1280x720">1280 x 720</option>
