@@ -12,8 +12,6 @@ html {
 
 .player {
   width: 100%;
-  /* border:5px solid rgba(0,0,0,0.2); */
-  /* box-shadow:0 0 20px rgba(0,0,0,0.2); */
   position: relative;
   font-size: 30;
   overflow: hidden;
@@ -74,24 +72,11 @@ button::before{
   z-index:2147483648;
   right: 0;
   left: 0;
-  /* padding: 10px; */
   height:10%;
   position: absolute;
   bottom: 0;
   transition: all 0.2s ease;
   background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5));
-  /* display:flex;
-  position: absolute;
-  left: 0;
-  bottom:0;
-  width: 100%;
-  height:30px;
-  flex-wrap:wrap;
-  background:rgba(0,0,0,0.4);
-  color: #fff;
-  z-index: 2147483648;  */
-  /* This is ridiculous so that it overrides the shadow 
-  dom and shows the custom player in full screen mode instead */
 }
 .left-controls{
   display: flex;
@@ -145,12 +130,6 @@ button::before{
    padding:3px;
 }
 
-/* .audio-input-list-group:hover .audio-input-list{
-  display: inline;
-}
-.audio-input-list-item:hover {
-  background: #007bff
-} */
 .audio-input-list-group {
   max-width:40px;
 }
@@ -175,6 +154,7 @@ button::before{
   padding: 20px 0px 0px 0px;
   /* border: 1px solid #888; */
   width: 80%;
+  height:90%;
   color:white;
 }
 
@@ -185,6 +165,30 @@ button::before{
   left: 0px;
   top: 0px;
   width: 50%; /* Full width */
+  height: 90%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.7); /* Black w/ opacity */
+}
+.right-top-modal{
+  display: none; /* Hidden by default */
+  position: absolute; 
+  z-index: 1; /* Sit on top */
+  right: 0px;
+  top: 0px;
+  width: 50%; /* Full width */
+  height: 50%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.7); /* Black w/ opacity */
+}
+.full-modal{
+  display: none; /* Hidden by default */
+  position: absolute; 
+  z-index: 1; /* Sit on top */
+  right: 0px;
+  top: 0px;
+  width: 100%; /* Full width */
   height: 90%; /* Full height */
   overflow: auto; /* Enable scroll if needed */
   background-color: rgb(0,0,0); /* Fallback color */
@@ -227,6 +231,14 @@ button::before{
   border-radius: 2px;
   border: 0;
 }
+.test-groups{
+  position: absolute;
+  right:7em;
+  color:white;
+  margin: auto 6px;
+  border-radius: 2px;
+  border: 0;
+}
 .fullscreen-groups{
   position: absolute;
   right:0px;
@@ -238,15 +250,6 @@ button::before{
 .setting-list >*{
   padding: 1px;
  }
-/* .setting-list >*:hover {
- background: #007bff;
-}
-.codec-input-list:hover .codec-input-list-item{
-  display: inline;
-} */
-/* .codec-input-list-item:hover{
-  background: #007bff;
-} */
 .codec-input-list-h264 {
   font-size: 13px;
   position: absolute;
@@ -303,4 +306,39 @@ select {
 option{
   background-color: rgba(0,0,0,0.8);
   color:white;
+}
+#channelInfoBar{
+  position: absolute;
+  top:10px;
+  left:5px;
+  border-radius: 30px;
+  overflow: hidden;
+  font-size: 1rem;
+  transition: opacity .5s, visibility .5s, transform .5s;
+  background: rgba(0, 0, 0, .35);
+  color: #fff;
+  z-index: 10000;
+}
+
+#toast {
+  position: absolute;
+  top: 30px;
+  left: 50%;
+  padding: 15px 20px;
+  transform: translate(-50%, 10px);
+  border-radius: 30px;
+  overflow: hidden;
+  font-size: .8rem;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .5s, visibility .5s, transform .5s;
+  background: rgba(0, 0, 0, .35);
+  color: #fff;
+  z-index: 10000;
+}
+
+#toast.reveal {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0)
 }

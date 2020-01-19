@@ -1,6 +1,7 @@
 import style from './RemonShow.css';
 import Remon from '@remotemonster/sdk';
 import castBody from './castBody';
+import statBody from './statBody';
 
 class RemonShow extends HTMLElement {
   constructor() {
@@ -14,20 +15,22 @@ class RemonShow extends HTMLElement {
     this.poster;
     this.screenStream;
 
+    this.oldLocalABSent=0;
+    this.oldLocalVBSent=0;
+
     this.domLoaded= this.domLoaded.bind(this);
     this.parsingAttr= this.parsingAttr.bind(this);
+    this.onStat= this.onStat.bind(this);
+    this.onAddRemoteStream= this.onAddRemoteStream.bind(this);
+    this.updateDevices= this.updateDevices.bind(this);
   }
   parsingAttr(remonShow){
     this.channelId= remonShow.getAttribute('channelId');
     if (remonShow.getAttribute("listener")){
       this.listener= eval(remonShow.getAttribute("listener"));
-    }else{
-      this.listener = {
-        onCreateChannel(chid) {
-          console.log(`EVENT FIRED: onConnect: ${chid}`);
-        }
-      };
     }
+    this.listener.onStat = this.onStat;
+    this.listener.onAddRemoteStream= this.onAddRemoteStream;
     this.poster= (remonShow.getAttribute('poster'))? remonShow.getAttribute('poster'):null;
   }
   updateInputElementStyle(item){
@@ -82,30 +85,29 @@ class RemonShow extends HTMLElement {
   }
   async domLoaded(){
     console.log("리모트몬스터 Simple Broadcast web studio");
+    navigator.mediaDevices.ondevicechange= (e) => this.updateDevices();
     this.updateDevices();
   }
   async connectedCallback() {
-    // Dom 에 추가 된 후 
-    const remonCast = document.querySelector('remon-cast');
-    remonCast.innerHTML = castBody;
+    const remonShow = document.querySelector('remon-cast');
+    this.remonShow= remonShow;
+    remonShow.innerHTML = castBody;
 
     this.config = {
       credential: {
-        key: remonCast.getAttribute("key")?remonCast.getAttribute("key"):'1234567890',
-        serviceId: remonCast.getAttribute("serviceId")?remonCast.getAttribute("serviceId"):'SERVICEID1'
+        key: remonShow.getAttribute("key")?remonShow.getAttribute("key"):'1234567890',
+        serviceId: remonShow.getAttribute("serviceId")?remonShow.getAttribute("serviceId"):'SERVICEID1'
       },
       view: {local: '#localVideo'},
       media: {
         audio: {sampleSize: 8, 
-          echoCancellation:false, 
-          channelCount:2,
-          autoGainControl: false,
-          noiseSuppression: false
+          echoCancellation:false, channelCount:2,
+          autoGainControl: false, noiseSuppression: false
           },
         video: {codec:'H264'}
       }
     };
-    this.parsingAttr(remonCast);
+    this.parsingAttr(remonShow);
     window.addEventListener('DOMContentLoaded', this.domLoaded);
 
     this.player= document.querySelector('.player');
@@ -113,19 +115,28 @@ class RemonShow extends HTMLElement {
     this.video.poster= this.poster? this.poster:null;
     this._prepareControlAction();
   }
+  onAddRemoteStream(stream){
+    this.channelId= this.remon.getChannelId();
+    this.toast(`방송이 시작되었습니다. 방의 ID는 ${this.channelId} 입니다`);
+    this.setChannelInfo(`Channel: ${this.channelId}`);
+  }
+  onStat(stats){
+    stats.ABSent= (stats.nowLocalABSent-this.oldLocalABSent)/5;
+    stats.VBSent= (stats.nowLocalVBSent-this.oldLocalVBSent)/5;
+    stats.localAudioLevel= Math.round(stats.localAudioLevel*100);
+    this.ctrl('.stat-box').innerHTML= statBody(stats);
+    this.oldLocalABSent= stats.nowLocalABSent;
+    this.oldLocalVBSent= stats.nowLocalVBSent;
+  }
   _prepareControlAction(){
-    this.ctrl('.video-input-list-button').onclick = ()=> {
-      document.getElementById("videoInput-modal").style.display="block";
-    }
-    Array.prototype.filter.call(document.getElementsByClassName("close"), (el)=>{
-      el.onclick= () => el.parentElement.style.display="none";
+    this.ctrl('.video-input-list-button').onclick = ()=> this._modalToggle('videoInput-modal');
+    this.ctrl('.quality-button').onclick = ()=> this._modalToggle('quality-modal');
+    this.ctrl('.test-button').onclick = ()=> this._modalToggle('test-modal');
+    Array.prototype.filter.call(document.getElementsByClassName('close'), (el)=>{
+      el.onclick= () => el.parentElement.style.display='none';
     });
-    this.ctrl('.audio-input-list-button').onclick = ()=> {
-      document.getElementById("audioInput-modal").style.display="block";
-    }
-    this.ctrl('.setting-button').onclick = ()=> {
-      document.getElementById("setting-modal").style.display="block";
-    }
+    this.ctrl('.audio-input-list-button').onclick = ()=> this._modalToggle("audioInput-modal");
+    this.ctrl('.setting-button').onclick = ()=> this._modalToggle('setting-modal');
     this.ctrl('.toggle').onclick = ()=> this._togglePlay();
     this.ctrl('.codec-input-selector').onclick = ()=> this._changeCodec();
     this.video.onclick = ()=>{this._screenClick()};
@@ -137,20 +148,24 @@ class RemonShow extends HTMLElement {
   ctrl(className){
     return this.player.querySelector(className);
   }
+  _modalToggle(id){
+    const element= document.getElementById(id).style;
+    element.display= (element.display==='block')?'none':'block';
+  }
   _changeResolution(){
-    let resolution = this.resolutionSelector.options[this.resolutionSelector.selectedIndex].value.split('x')
-    this.config.media.video.width =  {min :resolution[0]};
-    this.config.media.video.height = {min : resolution[1]};
+    let resolution = this.ctrl('.resolution-input-selector').
+      options[this.ctrl('.resolution-input-selector').selectedIndex].value.split('x')
+    this.config.media.video.width =  {min :resolution[0], max: resolution[0]};
+    this.config.media.video.height = {min : resolution[1], max: resolution[1]};
   }
   _changeFrameRate(){
-    this.config.media.video.frameRate = {min:this.fpsSelector.options[this.fpsSelector.selectedIndex].value};
+    this.config.media.video.frameRate = {
+      min:this.ctrl('.fps-input-selector').options[this.ctrl('.fps-input-selector').selectedIndex].value,
+      max:this.ctrl('.fps-input-selector').options[this.ctrl('.fps-input-selector').selectedIndex].value};
   }
   _changeCodec(){
-    this.config.media.video.codec = this.codecSelector.options[this.codecSelector.selectedIndex].value;
-  }
-  _showList(styleClass){
-    let displayStyle = this.player.querySelector(styleClass).style.display;
-    displayStyle = (!displayStyle || displayStyle === 'none')? "inline":"";
+    this.config.media.video.codec = this.ctrl('.codec-input-selector').
+      options[this.ctrl('.codec-input-selector').selectedIndex].value;
   }
   _toggleFullscreen(){
     if (!this.player.fullscreenElement && this.player.requestFullscreen) {
@@ -164,8 +179,8 @@ class RemonShow extends HTMLElement {
     }
   }
   _screenClick(){
-    const method = this.video.paused ? 'play' : 'pause';
-    this.video[method]();
+    // const method = this.video.paused ? 'play' : 'pause';
+    // this.video[method]();
   }
   async _screenCapture(){
     if(this.remon){
@@ -181,25 +196,30 @@ class RemonShow extends HTMLElement {
     if(toggle.firstChild.nodeValue !== "▶"){
       toggle.firstChild.nodeValue = "▶";
       this.remon.close();
-      // this.ctrl('.codecSelector').disabled =false;
-      // this.ctrl('.fpsSelector').disabled =false;
-      // this.ctrl('.resolutionSelector').disabled =false;
+      this.setChannelInfo('');
+      this.remon= null;
     }else{
       toggle.firstChild.nodeValue = "⏹"
       this.remon = new Remon({config:this.config, listener:this.listener});
+      this.channelId= this.remonShow.getAttribute("channelId");
       this.remon.createCast(this.channelId?this.channelId:undefined);
-      // this.ctrl('.codecSelector').disabled =true;
-      // this.ctrl('.fpsSelector').disabled =true;
-      // this.ctrl('.resolutionSelector').disabled =true;
     }
   }
-}
-function isInspectOpen()
-{
-  console.log('a')
-    console.profile(); 
-    console.profileEnd(); 
-    if (console.clear) console.clear();
-    return console.profiles.length > 0;
+  setChannelInfo(info){
+    document.getElementById("channelInfoBar").innerHTML= info;
+  }
+  toast(string) {
+    let removeToast;
+    const toast = document.getElementById("toast");
+    toast.classList.contains("reveal") ?
+      (clearTimeout(removeToast), removeToast = setTimeout(function () {
+          document.getElementById("toast").classList.remove("reveal")
+      }, 3000)) :
+      removeToast = setTimeout(function () {
+          document.getElementById("toast").classList.remove("reveal")
+      }, 3000)
+    toast.classList.add("reveal");
+    toast.innerText = string
+  }
 }
 customElements.define('remon-cast', RemonShow);

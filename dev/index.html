@@ -9,43 +9,41 @@
     <script src="RemonShow-mini.js"></script>
     <script>
         var myListener = {
-            onCreateChannel(chid) {
-                console.log(`EVENT FIRED: onConnect: ${chid}`);
-            },
-            onComplete() {
-                console.log('EVENT FIRED: onComplete');
-            },
-            onDisconnectChannel() {
-                // is called when other peer hang up.
-                console.log("some viewer is exited")
-            },
-            onClose() {
-                // is called when remon.close() method is called.
-                console.log('EVENT FIRED: onClose');
-            },
-            onError(error) {
-                console.log(`EVENT FIRED: onError: ${error}`);
-            },
-            onStat(result) {
-                console.log(`EVENT FIRED222: onStat: ${result}`);
-            }
-        };
+        onCreateChannel(chid) {
+            console.log(`EVENT FIRED: onConnect: ${chid}`);
+        },
+        onComplete() {
+            console.log('EVENT FIRED: onComplete');
+        },
+        onDisconnectChannel() {
+            // is called when other peer hang up.
+            console.log("some viewer is exited")
+        },
+        onClose() {
+            // is called when remon.close() method is called.
+            console.log('EVENT FIRED: onClose');
+        },
+        onError(error) {
+            console.log(`EVENT FIRED: onError: ${error}`);
+        }
+    };
     </script>
 </head>
 
-<body id="page-top" 
-style="background-image: url( 'img/webinar.png' );
-background-repeat: no-repeat;
-background-size:cover">
+<body id="page-top" >
 <div id="content">
-  <h1>Remote Video Tag</h1>
-  <div style="position: absolute; right:0em; bottom:0em;width:800px; height:600px;">
+  <h1>RemonCast Studio Sample</h1>
+  Input broadcast room id: <input id="channelIdInput" onkeydown="updateChannelId"></input>
+  <div style="width:800px; height:600px;">
   <remon-cast key="1234567890" serviceId="SERVICEID1" 
-    listener="myListener" channelId="testRemonShow"
-    poster="img/poster.jpg">
+    listener="myListener" poster="img/poster.jpg">
   </remon-cast>
   </div>
 </div>
 </body>
-
+<script>
+    document.getElementById('channelIdInput').onkeydown= (e)=>{
+        document.getElementsByTagName("remon-cast")[0].setAttribute("channelId", e.target.value);
+    }
+</script>
 </html>
