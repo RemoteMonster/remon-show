@@ -1,13 +1,13 @@
 {
   "name": "@remotemonster/show",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "live streaming web stduio for RemoteMonster developers",
   "main": "remonshow-mini.min.js",
   "scripts": {
     "dev": "rollup -c rollup.config.dev.js --watch",
-    "build": "rollup -c rollup.config.prod.js",
+    "build": "rollup -c rollup.config.prod.js && cp dist/remonshow-mini.min.js .",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "publish": "npm run build && cp dist/remonshow-mini.min.js . && npm publish --access=public"
+    "publish": "npm publish --access=public"
   },
   "author": {
     "name": "RemoteMonster",

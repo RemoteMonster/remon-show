@@ -131,7 +131,6 @@ class RemonShow extends HTMLElement {
   _prepareControlAction(){
     this.ctrl('.video-input-list-button').onclick = ()=> this._modalToggle('videoInput-modal');
     this.ctrl('.quality-button').onclick = ()=> this._modalToggle('quality-modal');
-    this.ctrl('.test-button').onclick = ()=> this._modalToggle('test-modal');
     Array.prototype.filter.call(document.getElementsByClassName('close'), (el)=>{
       el.onclick= () => el.parentElement.style.display='none';
     });
