@@ -7,7 +7,7 @@
     "dev": "rollup -c rollup.config.dev.js --watch",
     "build": "rollup -c rollup.config.prod.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "publish": "cp dist/remonshow-mini.min.js . && npm publish --access=public"
+    "publish": "npm run build && cp dist/remonshow-mini.min.js . && npm publish --access=public"
   },
   "author": {
     "name": "RemoteMonster",
