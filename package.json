@@ -17,6 +17,7 @@
     "type": "git",
     "url": "git+https://github.com/RemoteMonster/remon-show.git"
   },
+  "homepage": "https://remotemonster.com/",
   "devDependencies": {
     "rollup": "^1.29.0",
     "rollup-plugin-commonjs": "^10.1.0",
