@@ -23,7 +23,7 @@ export default [
       terser(),
       postcss({
         plugins: [cssimport(), autoprefixer()]
-      })
+      }),
     ]
   },
   

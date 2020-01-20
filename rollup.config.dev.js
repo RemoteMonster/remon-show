@@ -40,6 +40,5 @@ export default {
     postcss({
       plugins: [cssimport(), autoprefixer()]
     })
-    
   ]
 };

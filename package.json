@@ -33,7 +33,8 @@
     "rollup-plugin-terser": "^5.2.0"
   },
   "dependencies": {
-    "@remotemonster/sdk": "2.5.10"
+    "@remotemonster/sdk": "2.5.10",
+    "platform": "^1.3.5"
   },
   "keywords": [
     "WebRTC",

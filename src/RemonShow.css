@@ -31,6 +31,7 @@ html {
   cursor: pointer;
   position: relative;
   margin-right: 7px;
+  margin-left:4px;
   font-size: 22px;
   padding: 3px;
   border: none;
@@ -99,55 +100,6 @@ button::before{
 }
 
 
-/* video input list menu */
-
-.video-input-list-group .video-input-list > *{
-  padding:3px;
-}
-
-.video-input-list-group {
-  max-width:40px;
-}
-
-.video-input-list-group .video-input-list {
-  font-size: 12px;
-  position: absolute;
-  display: none;
-  max-width: 350px;
-  height: auto;
-  overflow-y: scroll;
-  bottom: 18px;
-  left: 25px;
-  background: rgba(0,0,0,0.5);
-  border-radius: 5px;
-  right: 0;
-}
-
-/* audio input list menu */
-
-
-.audio-input-list-group .audio-input-list > *{
-   padding:3px;
-}
-
-.audio-input-list-group {
-  max-width:40px;
-}
-
-.audio-input-list-group .audio-input-list {
-  font-size: 12px;
-  position: absolute;
-  display: none;
-  max-width: 250px;
-  height: auto;
-  overflow-y: scroll;
-  bottom: 18px;
-  left: 50px;
-  background: rgba(0,0,0,0.5);
-  border-radius: 5px;
-  right: 0;
-}
-
 .modal-body{
   /* background-color: #fefefe; */
   margin: auto;
@@ -207,45 +159,7 @@ button::before{
   text-decoration: none;
   cursor: pointer;
 }
-.setting-groups{
-  position: absolute;
-  right:1.5em;
-  color:white;
-  margin: auto 6px;
-  border-radius: 2px;
-  border: 0;
-}
-.log-groups{
-  position: absolute;
-  right:3.2em;
-  color:white;
-  margin: auto 6px;
-  border-radius: 2px;
-  border: 0;
-}
-.quality-groups{
-  position: absolute;
-  right:5em;
-  color:white;
-  margin: auto 6px;
-  border-radius: 2px;
-  border: 0;
-}
-.test-groups{
-  position: absolute;
-  right:7em;
-  color:white;
-  margin: auto 6px;
-  border-radius: 2px;
-  border: 0;
-}
-.fullscreen-groups{
-  position: absolute;
-  right:0px;
-  color:white;
-  border-radius: 2px;
-  border: 0;
-}
+
 
 .setting-list >*{
   padding: 1px;
@@ -341,4 +255,7 @@ option{
   opacity: 1;
   visibility: visible;
   transform: translate(-50%, 0)
+}
+.icon-button{
+  width:0.875em;
 }
