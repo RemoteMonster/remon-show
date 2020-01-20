@@ -13,7 +13,7 @@
 Add these tags to your document's `<head>`:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@remotemonster/remonshow-mini.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@remotemonster/show/remonshow-mini.min.js"></script>
 ```
 > For the latest version of RemonShow and URLs to use, check out the document page on our website.
 
