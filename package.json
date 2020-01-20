@@ -1,6 +1,6 @@
 {
   "name": "@remotemonster/show",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "live streaming web stduio for RemoteMonster developers",
   "main": "remonshow-mini.min.js",
   "scripts": {
