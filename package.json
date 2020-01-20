@@ -2,7 +2,7 @@
   "name": "@remotemonster/show",
   "version": "1.0.0",
   "description": "live streaming web stduio for RemoteMonster developers",
-  "main": "remonShow-mini.js",
+  "main": "remonshow-mini.min.js",
   "scripts": {
     "dev": "rollup -c rollup.config.dev.js --watch",
     "build": "rollup -c rollup.config.prod.js",
