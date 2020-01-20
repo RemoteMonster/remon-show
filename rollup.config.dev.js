@@ -10,14 +10,14 @@ export default {
   input: "src/RemonShow.js",
   output: [
     {
-      file: "dist/RemonShow-mini.js",
+      file: "dist/remonshow-mini.js",
       format: "umd",
       name: "RemonShow",
       sourcemap: true,
       intro: "const ENVIRONMENT = 'dev';"
     },
     {
-      file: "dist/RemonShow.mjs",
+      file: "dist/remonshow.mjs",
       format: "es",
       sourcemap: true,
       intro: "const ENVIRONMENT = 'dev';"

@@ -10,7 +10,7 @@ export default [
     input: "src/RemonShow.js",
     output: {
       format: "umd",
-      file: "dist/RemonShow-mini.min.js",
+      file: "dist/remonshow-mini.min.js",
       name: "RemonShow"
     },
     plugins: [
