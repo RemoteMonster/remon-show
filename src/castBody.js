@@ -3,14 +3,7 @@ const body = `
   <video id = "localVideo" class="viewer" autoplay muted playsinline></video>
   <div class="video-controls">
     <div class="left-controls">
-      <button class="video-button toggle" title="Toggle Play">
-      <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="play" 
-        role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" 
-        class="icon-button">
-        <path fill="currentColor" d="M424.4 214.7L72.4 6.6C43.8-10.3 0 6.1 0 47.9V464c0 37.5 40.7 60.1 72.4 41.3l352-208c31.4-18.5 31.5-64.1 0-82.6z" class="">
-        </path>
-      </svg>
-      </button>
+      <button class="video-button toggle" style="font-size:1.6em;" title="Toggle Play">▶</button>
       <button class="video-button video-input-list-button" title="Video Input">
         <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="video" 
           role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" 

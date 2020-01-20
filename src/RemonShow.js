@@ -199,7 +199,7 @@ class RemonShow extends HTMLElement {
       this.setChannelInfo('');
       this.remon= null;
     }else{
-      toggle.firstChild.nodeValue = "⏹"
+      toggle.firstChild.nodeValue = "■"
       this.remon = new Remon({config:this.config, listener:this.listener});
       this.channelId= this.remonShow.getAttribute("channelId");
       this.remon.createCast(this.channelId?this.channelId:undefined);
