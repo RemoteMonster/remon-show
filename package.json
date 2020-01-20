@@ -1,15 +1,22 @@
 {
-  "name": "remon-show",
+  "name": "@remotemonster/show",
   "version": "1.0.0",
-  "description": "",
+  "description": "live streaming web stduio for RemoteMonster developers",
   "main": "remonShow-mini.js",
   "scripts": {
     "dev": "rollup -c rollup.config.dev.js --watch",
     "build": "rollup -c rollup.config.prod.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
+  "author": {
+    "name": "RemoteMonster",
+    "email": "remotemonster@remotemonster.com"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RemoteMonster/remon-show.git"
+  },
   "devDependencies": {
     "rollup": "^1.29.0",
     "rollup-plugin-commonjs": "^10.1.0",
@@ -25,5 +32,9 @@
   },
   "dependencies": {
     "@remotemonster/sdk": "2.5.10"
-  }
+  },
+  "keywords":[
+    "WebRTC", "RemoteMonster",
+    "videoStudio", "liveStreaming"
+  ]
 }

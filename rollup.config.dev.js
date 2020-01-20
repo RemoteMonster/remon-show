@@ -33,6 +33,7 @@ export default {
     serve({
       /*http test (host is your local ip)*/
       //host : '172.30.1.44',
+      port: 20001,
       contentBase: ["dist", "dev"]
     }),
     livereload("dist"),
