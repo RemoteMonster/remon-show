@@ -14,6 +14,7 @@ class RemonShow extends HTMLElement {
     this.channelId;
     this.poster;
     this.screenStream;
+    this.localStream;
 
     this.oldLocalABSent=0;
     this.oldLocalVBSent=0;
@@ -63,6 +64,7 @@ class RemonShow extends HTMLElement {
             this.video.srcObject= await navigator.mediaDevices.getUserMedia(
               {audio:true, video:{deviceId:device.deviceId}}
             );
+            this.config.view.localStream= this.video.srcObject;
             this.screenStream= undefined;
           }
           div.parentElement.parentElement.parentElement.style.display="none";
