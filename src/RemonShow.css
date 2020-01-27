@@ -32,7 +32,7 @@ html {
   position: relative;
   margin-right: 7px;
   margin-left:4px;
-  font-size: 22px;
+  font-size: 1.5em;
   padding: 3px;
   border: none;
   outline: none;
@@ -194,19 +194,18 @@ button::before{
   right: 170px;
 }
 
-.video-input-list-item{
-  color:yellow;
+
+.modal-title{
+  font-size:2em;
 }
-.video-input-list-item:hover{
+.device-item{
+  color: yellow;
+  margin-top: 1em;
+}
+.device-item:hover{
   cursor: pointer;
 }
 
-.audio-input-list-item{
-  color:yellow;
-}
-.audio-input-list-item:hover{
-  cursor: pointer;
-}
 
 video::-webkit-media-controls {
   display:none !important;

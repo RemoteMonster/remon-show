@@ -3,7 +3,7 @@ const body = `
   <video id = "localVideo" class="viewer" autoplay muted playsinline></video>
   <div class="video-controls">
     <div class="left-controls">
-      <button class="video-button toggle" style="font-size:1.6em;" title="Toggle Play">▶</button>
+      <button class="video-button toggle" class="video-button" title="Toggle Play">▶</button>
       <button class="video-button video-input-list-button" title="Video Input">
         <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="video" 
           role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" 
@@ -75,7 +75,7 @@ const body = `
   <div id="videoInput-modal" class="left-modal">
     <span class="close">&times;</span>
     <div class="modal-body">
-      <h1>Video Input List</h1><br>
+      <div class="modal-title">Video Input List</div><br>
       <div class="video-input-list" style= "height: auto; overflow-y: hidden;">
       </div>
     </div>
@@ -89,7 +89,7 @@ const body = `
   <div id="quality-modal" class="right-top-modal">
     <span class="close">&times;</span>
     <div class="modal-body">
-      <h1>Stat</h1><br>
+      <div class="modal-title">Stat</div><br>
       <div class="stat-box" style= "height: auto; overflow-y: hidden;">
       </div>
     </div>
@@ -97,7 +97,7 @@ const body = `
   <div id="audioInput-modal" class="left-modal">
     <span class="close">&times;</span>
     <div class="modal-body">
-      <h1>Audio Input List</h1><br>
+      <div class="modal-title">Audio Input List</div><br>
       <div class="audio-input-list" style= "height: auto; overflow-y: hidden;">
       </div>
     </div>
@@ -105,7 +105,7 @@ const body = `
   <div id="setting-modal" class="left-modal">
     <span class="close">&times;</span>
     <div class="modal-body">
-      <h1>Setting</h1><br>
+      <div class="modal-title">Setting</div><br>
       <div class="setting-list">
         <div class="codec-input-list">Codec: &nbsp;
           <select class="codec-input-selector" >

@@ -54,7 +54,8 @@ class RemonShow extends HTMLElement {
       div.innerText = device.label;
 
       if (device.kind === "videoinput") {
-        div.className = "video-input-list-item";
+        console.log(device.deviceId +' '+ device.label);
+        div.className = "video-input-list-item device-item";
         div.onclick = async (e)=>{
           if(this.remon){
             this.remon.setVideoDevice(device.deviceId);
@@ -71,7 +72,7 @@ class RemonShow extends HTMLElement {
         }
         this.ctrl('.video-input-list').appendChild(div);
       } else if (device.kind === "audioinput") {
-        div.className = "audio-input-list-item";
+        div.className = "audio-input-list-item device-item";
         div.onclick = (e)=>{
           if(this.remon){
             this.remon.setAudioDevice(device.deviceId);
