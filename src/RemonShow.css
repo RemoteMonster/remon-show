@@ -13,7 +13,7 @@ html {
 .player {
   width: 100%;
   position: relative;
-  font-size: 30;
+  font-size: 16px;
   overflow: hidden;
 }
 
