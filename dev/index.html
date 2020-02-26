@@ -6,7 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="RemoteMonster live media service demo">
-    <script src="RemonShow-mini.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" type="text/css">
+    <script src="Remonshow-mini.js"></script>
     <script>
         var myListener = {
         onCreateChannel(chid) {
@@ -34,16 +35,20 @@
 <div id="content">
   <h1>RemonCast Studio Sample</h1>
   Input broadcast room id: <input id="channelIdInput" onkeydown="updateChannelId"></input>
-  <div style="width:800px; height:600px;">
-  <remon-cast key="1234567890" serviceId="SERVICEID1" 
+  <div style="width:300px; height:200px;">
+  <remon-audio key="1234567890" serviceId="SERVICEID1" 
     listener="myListener" poster="img/poster.jpg">
-  </remon-cast>
+  </remon-audio>
   </div>
 </div>
 </body>
 <script>
     document.getElementById('channelIdInput').onkeydown= (e)=>{
-        document.getElementsByTagName("remon-cast")[0].setAttribute("channelId", e.target.value);
+        if(document.querySelector('remon-cast')){
+            document.getElementsByTagName("remon-cast")[0].setAttribute("channelId", e.target.value);
+        }else if(document.querySelector('remon-audio')){
+            document.getElementsByTagName("remon-audio")[0].setAttribute("channelId", e.target.value);
+        }
     }
 </script>
 </html>
